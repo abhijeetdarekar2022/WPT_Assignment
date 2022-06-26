@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
+    <script>
+        $(()=>{
+            console.log("Jquary Working");
+            let arr = [{addno : 1, pincode : 414001, address : 'Ahmednagar'},
+                       {addno : 2, pincode : 400001, address : 'Mumbai'},
+                       {addno : 3, pincode : 440001, address : 'Nagpur'},
+                       {addno : 4, pincode : 422001, address : 'Nashik'}];
+
+            function getaddno(addno){
+              
+ 
+              let output ={ result:false , adddetails:{} };
+                 for(let i=0; i < arr.length;i++)
+                 {
+                     if(arr[i].addno == addno)
+                     {
+                         output.result=true;
+                         output.adddetails=arr[i];
+                         break;	
+ 
+                     }
+     
+                 }
+
+             return output;
+
+            } 
+            function buttonviewer(output){
+           
+                 if(output.result){
+                     $('#t2').val(output.adddetails.pincode);
+                    $('#t3').val(output.adddetails.address);
+                    $('#mssg').text("Add no found");
+
+                 }
+                else{
+                     $('#t2').val("");
+                     $('#t3').val("");
+                     $('#mssg').text("Add no  Not found");
+                    }
+         
+            } 
+
+            function addAddress(input){
+                let added = false;
+                arr.push(input);
+                added = true;
+                return added;
+            }
+
+
+            $('#t1').blur(()=>{
+                
+                let addno = $('#t1').val();
+                $("#itemno").prop('disabled',true);
+                let output = getaddno(addno);
+                console.log(output);
+                buttonviewer(output);
+                      
+            });
+
+            $('#b1').click(()=>{
+                console.log("Click event Occur");
+                let arrcontents="";
+	            for(let i=0; i < arr.length;i++)
+	            {
+	            arrcontents += "<br/>" + arr[i].addno + "  " + arr[i].pincode + " " + arr[i].address;
+	            }
+	            $("#msg").html(arrcontents);
+            });
+
+     
+            $('#b2').click(()=>{
+                console.log("Add event Occur");
+
+                let input = {addno:$("#t1").val(), pincode:$("#t2").val(), address:$("#t3").val()};
+
+                let addoutput = addAddress(input);
+
+                if(addoutput){
+                    
+                }
+            });
+
+        });
+    </script>
+    <style>
+        #t3{
+            width: 200px;
+            height: 50px
+        }
+        #container{
+            padding-left: 30%;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+    Add No:
+    <input type="text" id="t1" placeholder="Address No"><span id="mssg">Enter tab</span>
+    <br>
+    <br>
+    Pincode:
+    <input type="text" id="t2" placeholder="Pincode">
+    <br>
+    <br>
+    Address:
+    <input type="text" id="t3" placeholder="Address">
+    <br>
+    <br>
+    <button id="b1">Get Area Info</button>
+    <button id="b2">Add Address</button>
+    <button id="b3">Delete Address</button>
+    <hr>
+    Full Address:
+    <br>
+    <span id="msg">Full Address Print Here</span>
+</div>
+</body>
+</html>
