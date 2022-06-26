@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script>
+        $(() => {
+            //====================Blur Event================================
+            $("#itemno").blur(() => {
+                let itemnum = $("#itemno").val();
+                console.log(itemno);
+
+                let ajaxparams = {
+                    data: { itemno: itemnum },
+                    url: "http://localhost:909/getItem",
+                    type: 'get',
+                    dataType: "json",
+                    success: (output) => {
+
+                        if (output.status) {
+                            $("#msg").text("Items Detail Found");
+                            $("#itemname").val(output.itemdetails.itemname);
+                            $("#itemprice").val(output.itemdetails.itemprice);
+                            document.querySelector("#add").disabled = true;
+                            document.querySelector("#update").disabled = false;
+
+
+                        }
+                        else {
+                            $("#msg").text("Items Detail Not Found");
+                            $("#itemname").val("");
+                            $("#itemprice").val("");
+                            document.querySelector("#add").disabled = false;
+                            document.querySelector("#update").disabled = true;
+
+                        }
+                    },
+                    error: (error) => { console.log("failure") }
+                };
+                $.ajax(ajaxparams);
+            });
+            //=======================ADD=============================
+            $("#add").click(
+                () => {
+                    let input = {
+                        itemno: $("#itemno").val(),
+                        itemname: $("#itemname").val(),
+                        itemprice: $("#itemprice").val()
+                    };
+
+                    let ajaxparams = {
+                        data: input,
+                        url: "http://localhost:909/addItem",
+                        type: 'get',
+                        dataType: "json",
+                        success: (output) => {
+
+                            if (output) {
+                                $("#msg").text("added succesfully");
+                            }
+                            else {
+                                $("#msg").text("could not add item");
+                            }
+
+                            $("#itemno").val("");
+                            $("#itemname").val("");
+                            $("#itemprice").val("");
+
+                            showContents();
+
+                            document.querySelector("#add").disabled = true;
+                            document.querySelector("#update").disabled = true;
+
+                        },
+                        error: (errr) => { console.log("failure" + errr); }
+                    };
+                    $.ajax(ajaxparams);
+                });
+            //=======================UPDATE=============================
+
+            $("#update").click(() => {
+
+                let input = {
+                    itemno: $("#itemno").val(),
+                    itemname: $("#itemname").val(),
+                    itemprice: $("#itemprice").val()
+                };
+
+
+                let ajaxparams = {
+
+                    data: input,
+                    url: "http://localhost:909/updateItem",
+                    type: 'get',
+                    dataType: "json",
+                    success: (output) => {
+
+                        if (output) {
+                            $("#msg").text("updated successfully");
+
+                        }
+                        else {
+
+                            $("#msg").text("could not update item");
+
+                        }
+                        $("#itemno").val("");
+                        $("#itemname").val("");
+                        $("#itemprice").val("");
+
+                        showContents();
+
+                        document.querySelector("#update").disabled = true;
+                        document.querySelector("#add").disabled = true;
+
+                    },
+                    error: (mistake) => { console.log("error " + mistake); }
+                };
+                $.ajax(ajaxparams);
+            });
+            //====================Show Content================================
+            function showContents() {
+                let ajaxparams = {
+                    data: {},
+                    url: "http://localhost:909/getAllItems",
+                    type: 'get',
+                    dataType: "json",
+                    success: (dgbs) => {
+                        items = dgbs;
+
+                        let itemscontents = "";
+                        for (let i = 0; i < items.length; i++) {
+                            itemscontents += "<br/>" + items[i].itemno + "  " + items[i].itemname + " " + items[i].itemprice;
+                        }
+                        $("#content").html(itemscontents);
+
+
+
+                    },
+                    error: (error) => { console.log("failure " + error) }
+
+                };
+                $.ajax(ajaxparams);
+
+
+            }
+            //====================================================
+            showContents();
+
+        });
+    </script>
+</head>
+
+<body>
+    <input type="text" placeholder="Item Number" id="itemno"><span id="msg">What Happened</span>
+    <br><input type="text" placeholder="Item Name" id="itemname"><br>
+    <input type="text" placeholder="Item Price" id="itemprice"><br>
+    <br>
+    <button id="add" disabled>Add Item</button>
+    <button id="update" disabled>Update Item</button>
+    <hr>
+    <p id="content">All Items will be shown here</p>
+</body>
+
+</html>
