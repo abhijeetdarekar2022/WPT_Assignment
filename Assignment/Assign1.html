@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign1</title>
+    <script>
+       
+        window.addEventListener('DOMContentLoaded' ,() => {
+            console.log('Event Occur'); 
+            
+            let arr = [10,20,30,40,50,60,70,80,90,100];
+            console.log(arr);
+
+            //i.	Check the number whether it is present in the array or not
+            function checknumberinarray(number){
+                let found = false;
+                for(let i = 0; i < arr.length; i++){
+                
+                  if(arr[i] == number){
+                      found = true;
+                      break;
+                    }
+                }
+                 return found;
+            }
+
+            const Enum = document.querySelector("#Enum");
+            Enum.addEventListener('blur', () => {
+                //console.log('Event Occur'); 
+                let number = document.querySelector('#Enum').value;
+                let Found = checknumberinarray(number);
+
+                if(!Found){
+
+                    document.querySelector("#add").disabled=false;
+			        document.querySelector("#edit").disabled=true;
+			        document.querySelector("#delete").disabled=true;
+			        document.querySelector("#viewall").disabled=true;
+			        document.querySelector("#viewoddposition").disabled=true;
+                }
+                else{
+
+                    document.querySelector("#add").disabled=true;
+			        document.querySelector("#edit").disabled=false;
+			        document.querySelector("#delete").disabled=false;
+			        document.querySelector("#viewall").disabled=true;
+			        document.querySelector("#viewoddposition").disabled=true;
+                }
+
+            });
+
+ //=====================================Add Element=============================
+
+            let add = document.querySelector('#add');
+            add.addEventListener('click', () => {
+                let number = document.querySelector('#Enum').value;
+                arr.push(parseInt(number));
+                document.querySelector('#add').disabled= true;
+                document.querySelector('#msg').innerHTML= "Element added Successful"
+                document.querySelector('#viewall').disabled = false;
+
+            });
+
+//=====================================Delete Element=============================   
+            let del = document.querySelector('#delete');
+            del.addEventListener('click', () => {
+                let number = document.querySelector('#Enum').value;
+                for(let i = 0; i < arr.length;i++){
+                    if(arr[i] == number){
+                        arr.splice(i,1);
+                        break;
+                    }
+                }
+                console.log(arr);
+                document.querySelector('#msg').innerHTML= "Element Deleted Successful"
+                document.querySelector('#viewall').disabled = false;
+            });
+
+ //=====================================View All==================================
+
+            let view = document.querySelector("#viewall");
+            view.addEventListener('click', () => {
+                document.querySelector("#contents").innerHTML = "[ "+arr+" ]";
+            });
+
+        });
+    </script>
+</head>
+<body>
+    <input type="text" placeholder="Enter a number" id="Enum"><span id="msg">Message will appear here</span>
+    <br><br>
+    <button id="add" disabled>Add</button>
+    <button id="edit" disabled>Edit</button>
+    <button id="delete" disabled>Delete</button>
+    <button id="viewall" disabled>View all</button>
+    <button id="viewoddposition" disabled>Show odd position</button>
+
+    <br/><p id="contents"> all arary contents will be shown here</p>
+    
+</body>
+</html>
